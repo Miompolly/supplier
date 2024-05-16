@@ -1,3 +1,10 @@
+
+
+<?php
+session_start(); 
+
+?>
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -60,8 +67,17 @@ $(document).ready(function() {
 		
     </ul>
     <ul class="navbar-nav">
-    <li><a href="#" class="nav-link"> <i class="fa fa-envelope"></i> </a></li>
-		<li><a href="#" class="nav-link"> <i class="fa fa-phone"></i> Miompolly</a></li>
+   
+		<li><a href="#" class="nav-link">
+    <?php
+            
+            if (isset($_SESSION['success'])) {
+                echo $_SESSION['success'];
+                unset($_SESSION['success']);
+            }
+            ?>
+  
+  </a></li>
 		
 
 		

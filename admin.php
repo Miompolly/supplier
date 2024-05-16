@@ -1,9 +1,7 @@
 
-
-<?php include 'components/admin_header.php'; ?>
-
-
-
+<?php
+include 'components/admin_header.php';
+?>
 <!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-conten padding-y bg">
 

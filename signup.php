@@ -1,7 +1,9 @@
 
+<?php
+session_start(); 
 
-<?php include 'components/user_header.php'; ?>
-
+include 'components/user_header.php';
+?>
 
 <!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-content padding-y">
@@ -10,6 +12,20 @@
 	<div class="card mx-auto" style="max-width:520px; margin-top:40px;">
       <article class="card-body">
 		<header class="mb-4"><h4 class="card-title">Sign up</h4></header>
+		
+
+		<?php
+            if (isset($_SESSION['error'])) {
+                echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error'] . '</div>';
+                unset($_SESSION['error']);
+            }
+            if (isset($_SESSION['success'])) {
+                echo '<div class="alert alert-success" role="alert">' . $_SESSION['success'] . '</div>';
+                unset($_SESSION['success']);
+            }
+            ?>
+
+
 		<form action="server.php" method="POST">
 				<div class="form-row">
 					<div class="col form-group">
@@ -28,11 +44,11 @@
 				</div> <!-- form-group end.// -->
 				<div class="form-group">
 					<label class="custom-control custom-radio custom-control-inline">
-					  <input class="custom-control-input" checked="" type="radio" name="gender" value="option1">
+					  <input class="custom-control-input" checked="" type="radio" name="gender" value="male">
 					  <span class="custom-control-label"> Male </span>
 					</label>
 					<label class="custom-control custom-radio custom-control-inline">
-					  <input class="custom-control-input" type="radio" name="gender" value="option2">
+					  <input class="custom-control-input" type="radio" name="gender" value="female">
 					  <span class="custom-control-label"> Female </span>
 					</label>
 				</div> <!-- form-group end.// -->

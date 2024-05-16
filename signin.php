@@ -1,6 +1,9 @@
-<?php include 'components/user_header.php'; ?>
 
+<?php
+session_start(); 
 
+include 'components/user_header.php';
+?>
 <!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-conten padding-y" style="min-height:84vh">
 
@@ -8,6 +11,16 @@
 	<div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
       <div class="card-body">
       <h4 class="card-title mb-4">Sign in</h4>
+      <?php
+            if (isset($_SESSION['error'])) {
+                echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error'] . '</div>';
+                unset($_SESSION['error']);
+            }
+            if (isset($_SESSION['success'])) {
+                echo '<div class="alert alert-success" role="alert">' . $_SESSION['success'] . '</div>';
+                unset($_SESSION['success']);
+            }
+            ?>
 	  <form method="POST" action="server.php">
     <div class="form-group">
         <input type="email" class="form-control" name="email" placeholder="Email Address">
