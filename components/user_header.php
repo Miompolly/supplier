@@ -1,3 +1,7 @@
+<?php
+session_start();
+include('config.php');
+?>
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -84,12 +88,21 @@ $(document).ready(function() {
 				<i class="fa fa-bars"></i> All Departements 
 			</button>
 			<div class="dropdown-menu">
-				<a class="dropdown-item" href="#">Machinery / Mechanical Parts / Tools </a>
-				<a class="dropdown-item" href="#">Consumer Electronics / Home Appliances </a>
-				<a class="dropdown-item" href="#">Auto / Transportation</a>
-				<a class="dropdown-item" href="#">Apparel / Textiles / Timepieces </a>
-				<a class="dropdown-item" href="#">Home & Garden / Construction / Lights </a>
-				<a class="dropdown-item" href="#">Beauty & Personal Care / Health </a> 
+			<?php
+                        $sql = "SELECT * FROM categories";
+                        $result = mysqli_query($conn, $sql);
+                        if (!$result) {
+                            die("Error: " . mysqli_error($conn));
+                        }
+
+                        if (mysqli_num_rows($result) > 0) { 
+                            while ($row = mysqli_fetch_assoc($result)) {
+                                echo "<a class='dropdown-item' href='#'>" . htmlspecialchars($row['categoryname']) . "</a>";
+                            }
+                        } else {
+                            echo "<a class='dropdown-item' href='#'>No categories available</a>";
+                        }
+                        ?>
 			</div>
 		</div>  <!-- category-wrap.// -->
 	</div> <!-- col.// -->

@@ -1,4 +1,26 @@
-<?php include 'components/user_header.php'; ?>
+<?php include 'components/user_header.php';
+include('config.php');
+function sanitize_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+
+$sql = "SELECT * FROM categories LIMIT 10";
+$result = mysqli_query($conn, $sql);
+if (!$result) {
+    die("Error: " . mysqli_error($conn));
+}
+
+$sqlpro = "SELECT * FROM products";
+$resultpro = mysqli_query($conn, $sqlpro);
+if (!$resultpro) {
+    die("Error: " . mysqli_error($conn));
+}
+$totalItems = mysqli_num_rows($resultpro);
+?>
 
 <!-- ========================= SECTION PAGETOP ========================= -->
 <section class="section-pagetop bg">
@@ -28,13 +50,18 @@
 			<div class="card-body">
 				
 				<ul class="list-menu">
-				<li><a href="#">People  </a></li>
-				<li><a href="#">Watches </a></li>
-				<li><a href="#">Cinema  </a></li>
-				<li><a href="#">Clothes  </a></li>
-				<li><a href="#">Home items </a></li>
-				<li><a href="#">Animals</a></li>
-				<li><a href="#">People </a></li>
+
+				<?php
+				if (mysqli_num_rows($result) > 0) {
+					
+					while ($row = mysqli_fetch_assoc($result)) {
+						echo"
+						<li><a href='#'> " . htmlspecialchars($row["categoryname"]) . "</a></li>";
+
+					}}
+				?>
+				
+				
 				</ul>
 
 			</div> <!-- card-body.// -->
@@ -121,157 +148,44 @@
 
 <header class="border-bottom mb-4 pb-3">
 		<div class="form-inline">
-			<span class="mr-md-auto">32 Items found </span>
+			<span class="mr-md-auto"><?php echo $totalItems; ?> Items found </span>
 			
 		</div>
 </header><!-- sect-heading -->
 
 <div class="row">
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				
-				<img src="images/items/1.jpg">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="./product-detail.html" class="title">Great item name goes here</a>
-					<div class="price-wrap mt-2">
-						<span class="price">$1280</span>
-						<del class="price-old">$1980</del>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-success">Added to cart </a>
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
 
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				<img src="images/items/2.jpg">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="./product-detail.html" class="title">Product name goes here just for demo item</a>
-					<div class="price-wrap mt-2">
-						<span class="price">$1280</span>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
 
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				<img src="images/items/3.jpg">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="./product-detail.html" class="title">Product name goes here just for demo item</a>
-					<div class="price-wrap mt-2">
-						<span class="price">$1280</span>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
 
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				<img src="images/items/4.jpg">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="./product-detail.html" class="title">Product name goes here just for demo item</a>
-					<div class="price-wrap mt-2">
-						<span class="price">$1280</span>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
+<?php
+if (mysqli_num_rows($resultpro) > 0) {
+    // Output data of each row
+    while ($row = mysqli_fetch_assoc($resultpro)) {
+        echo "<div class='col-md-4'>
+            <figure class='card card-product-grid'>
+                <div class='img-wrap'> 
+				<a href='product-detail.php?id=" . htmlspecialchars($row['id']) . "' class='img-wrap'><img src='data:" . htmlspecialchars($row['imageType']) . ";base64," . base64_encode($row['image']) . "' class='img-xs border'/></a>
+                </div> <!-- img-wrap.// -->
+                <figcaption class='info-wrap'>
+                    <div class='fix-height'>
+                        <a href='product-detail.php?id=" . htmlspecialchars($row['id']) . "' class='title'>" . htmlspecialchars($row['ProductName']) . "</a>
+                        <div class='price-wrap mt-2'>
+                            <span class='price'>Rwf" . htmlspecialchars($row['price']) . "</span>
+                            <del class='price-old'>Rwf 2000 </del>
+                        </div> <!-- price-wrap.// -->
+                    </div>
+                    <a href='#' class='btn btn-block btn-success'>Added to cart </a>
+                </figcaption>
+            </figure>
+        </div> <!-- col.// -->";
+    }
+} else {
+    echo "<p>No categories found</p>";
+}
+?>
 
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				<img src="images/items/5.jpg">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="./product-detail.html" class="title">Product name goes here just for demo item</a>
-					<div class="price-wrap mt-2">
-						<span class="price">$1280</span>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
+	
 
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				<img src="images/items/6.jpg">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="./product-detail.html" class="title">Product name goes here just for demo item</a>
-					<div class="price-wrap mt-2">
-						<span class="price">$1280</span>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
-
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				<img src="images/items/7.jpg">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="./product-detail.html" class="title">Product name goes here just for demo item</a>
-					<div class="price-wrap mt-2">
-						<span class="price">$1280</span>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
-
-	<div class="col-md-4">
-		<figure class="card card-product-grid">
-			<div class="img-wrap"> 
-				<img src="images/items/1.jpg">
-				
-			</div> <!-- img-wrap.// -->
-			<figcaption class="info-wrap">
-				<div class="fix-height">
-					<a href="./product-detail.html" class="title">Product name goes here just for demo item</a>
-					<div class="price-wrap mt-2">
-						<span class="price">$1280</span>
-					</div> <!-- price-wrap.// -->
-				</div>
-				<a href="#" class="btn btn-block btn-primary">Add to cart </a>	
-			</figcaption>
-		</figure>
-	</div> <!-- col.// -->
 </div> <!-- row end.// -->
 
 

@@ -1,5 +1,20 @@
 
-<?php include 'components/user_header.php'; ?>
+<?php include 'components/user_header.php'; 
+include('config.php');
+function sanitize_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+
+$sql = "SELECT * FROM products";
+$result = mysqli_query($conn, $sql);
+if (!$result) {
+    die("Error: " . mysqli_error($conn));
+}
+?>
 
 
 <!-- ========================= SECTION MAIN ========================= -->
@@ -44,78 +59,26 @@
 
 	
 <div class="row">
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="images/items/1.jpg"> </a>
-			<figcaption class="info-wrap">
-				<a href="./product-detail.html" class="title">Just another product name</a>
-				<div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="images/items/2.jpg"> </a>
-			<figcaption class="info-wrap">
-				<a href="./product-detail.html" class="title">Some item name here</a>
-				<div class="price mt-1">$280.00</div> <!-- price-wrap.// -->
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="images/items/3.jpg"> </a>
-			<figcaption class="info-wrap">
-				<a href="./product-detail.html" class="title">Great product name here</a>
-				<div class="price mt-1">$56.00</div> <!-- price-wrap.// -->
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="images/items/4.jpg"> </a>
-			<figcaption class="info-wrap">
-				<a href="./product-detail.html" class="title">Just another product name</a>
-				<div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="images/items/5.jpg"> </a>
-			<figcaption class="info-wrap">
-				<a href="./product-detail.html" class="title">Just another product name</a>
-				<div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="images/items/6.jpg"> </a>
-			<figcaption class="info-wrap">
-				<a href="./product-detail.html" class="title">Some item name here</a>
-				<div class="price mt-1">$280.00</div> <!-- price-wrap.// -->
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="images/items/7.jpg"> </a>
-			<figcaption class="info-wrap">
-				<a href="./product-detail.html" class="title">Great product name here</a>
-				<div class="price mt-1">$56.00</div> <!-- price-wrap.// -->
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
-	<div class="col-md-3">
-		<div class="card card-product-grid">
-			<a href="./product-detail.html" class="img-wrap"> <img src="images/items/9.jpg"> </a>
-			<figcaption class="info-wrap">
-				<a href="./product-detail.html" class="title">Just another product name</a>
-				<div class="price mt-1">$179.00</div> <!-- price-wrap.// -->
-			</figcaption>
-		</div>
-	</div> <!-- col.// -->
+	<?php
+if (mysqli_num_rows($result) > 0) {
+	
+	while ($row = mysqli_fetch_assoc($result)) {
+		echo "<div class='col-md-3'>
+				<div class='card card-product-grid'>
+				<a href='product-detail.php?id=" . htmlspecialchars($row['id']) . "' class='img-wrap'>
+						<img src='data:" . htmlspecialchars($row["imageType"]) . ";base64," . base64_encode($row["image"]) . "' class='img-xs border'/>
+					</a>
+					<figcaption class='info-wrap'>
+						<a href='./product-detail.html' class='title'>" . htmlspecialchars($row["ProductName"]) . "</a>
+						<div class='price mt-1'>Rwf" . htmlspecialchars($row["price"]) . "</div> <!-- price-wrap.// -->
+					</figcaption>
+				</div>
+			  </div>";
+	}
+}
+?>
+
+	
 </div> <!-- row.// -->
 
 </div><!-- container // -->

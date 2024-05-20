@@ -1,4 +1,9 @@
-<?php include 'components/user_header.php'; ?>
+<?php 
+session_start(); 
+include 'components/user_header.php'; 
+
+
+?>
 <section class="section-content padding-y bg">
 <div class="container">
 
@@ -7,98 +12,95 @@
 	<div class="row no-gutters">
 		<aside class="col-md-6">
 <article class="gallery-wrap"> 
-	<div class="img-big-wrap">
-	   <a href="#"><img src="./images/items/12.jpg"></a>
-	</div> <!-- img-big-wrap.// -->
 	
-</article> <!-- gallery-wrap .end// -->
-		</aside>
-		<main class="col-md-6 border-left">
-<article class="content-body">
+<?php
+include 'server.php'; 
 
-<h2 class="title">Off-White Odsy-1000 Low-Top Sneakers</h2>
+if (isset($_GET['id'])) {
+  $productid = $_GET['id'];
+  $sql = "SELECT * FROM products WHERE id = $productid";
+  $result = $conn->query($sql);
 
-<div class="mb-3"> 
-	<var class="price h4">$815.00</var> 
-</div> 
+  if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    echo "
+    <div class='img-big-wrap'>
+	<img src='data:" . htmlspecialchars($row["imageType"]) . ";base64," . base64_encode($row["image"]) . "' class='img-xs border'/>
+    </div> <!-- img-big-wrap.// -->
 
-<p>Virgil Abloh’s Off-White is a streetwear-inspired collection that continues to break away from the conventions of mainstream fashion. Made in Italy, these black and brown Odsy-1000 low-top sneakers.</p>
+    </article> <!-- gallery-wrap .end// -->
+    </aside>
+    <main class='col-md-6 border-left'>
+    <article class='content-body'>
+	<input type='hidden' name='productid' value='{$row['id']}'>
+    <h2 class='title'>" . htmlspecialchars($row["ProductName"]) . "</h2>
 
+    <div class='mb-3'> 
+        <var class='price h4'>Rwf " . htmlspecialchars($row["price"]) . "</var> 
+    </div> 
 
-<hr>
-	<div class="row">
-		<div class="item-option-select">
-			<h6>Choose Color</h6>
-			<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> Silver
-			  </label>
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color" > Gray
-			  </label>
-			  <label class="btn btn-light active">
-			    <input type="radio" name="radio_color checked"> Gold
-			  </label>
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> Black
-			  </label>
-			</div> 
-		</div>
-	</div> <!-- row.// -->
-	<div class="row">
-		<div class="item-option-select">
-			<h6>Select Size</h6>
-			<div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> S
-			  </label>
-			  <label class="btn btn-light active">
-			    <input type="radio" name="radio_color" checked> M
-			  </label>
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> L
-			  </label>
-			  <label class="btn btn-light">
-			    <input type="radio" name="radio_color"> XL
-			  </label>
-			</div> 
-		</div>
-	</div> <!-- row.// -->
-	<hr>
-	<a href="./product-detail.html" class="btn  btn-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i>  </a>
-</article> <!-- product-info-aside .// -->
-		</main> <!-- col.// -->
-	</div> <!-- row.// -->
-</div> <!-- card.// -->
-<!-- ============================ COMPONENT 1 END .// ================================= -->
+    <p>" . htmlspecialchars($row["description"]) . ".</p>
 
-<br>
+    <hr>
+  
+    <div class='row'>
+        <div class='item-option-select'>
+            <h6>Select Size</h6>
+            <div class='btn-group btn-group-sm btn-group-toggle' data-toggle='buttons'>
+              <label class='btn btn-light'>
+                <input type='radio' name='radio_size'> 1
+              </label>
+              <label class='btn btn-light active'>
+                <input type='radio' name='radio_size' checked> 2
+              </label>
+              <label class='btn btn-light'>
+                <input type='radio' name='radio_size'> 3
+              </label>
+              <label class='btn btn-light'>
+                <input type='radio' name='radio_size'> 4
+              </label>
+            </div> 
+        </div>
+    </div> <!-- row.// -->
+    <hr>
+    <a href='./product-detail.html' class='btn btn-primary'> <span class='text'>Add to cart</span> <i class='fas fa-shopping-cart'></i>  </a>
+    </article> <!-- product-info-aside .// -->
+    </main> <!-- col.// -->
+    </div> <!-- row.// -->
+    </div> <!-- card.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
 
-<div class="row">
-			<div class="col-md-9">
+    <br>
 
-	<header class="section-heading">
-		<h3>Customer Reviews </h3>  
-		
-	</header>
+    <div class='row'>
+        <div class='col-md-9'>
+            <header class='section-heading'>
+                <h3>Customer Reviews</h3>  
+            </header>
 
-	<article class="box mb-3">
-		<div class="icontext w-100">
-			<img src="./images/avatars/avatar1.jpg" class="img-xs icon rounded-circle">
-			<div class="text">
-				<span class="date text-muted float-md-right">24.04.2020 </span>  
-				<h6 class="mb-1">Mike John </h6>
-				
-			</div>
-		</div> <!-- icontext.// -->
-		<div class="mt-3">
-			<p>
-				Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip
-			</p>	
-		</div>
-	</article>
+            <article class='box mb-3'>
+                <div class='icontext w-100'>
+                    <img src='./images/avatars/avatar1.jpg' class='img-xs icon rounded-circle'>
+                    <div class='text'>
+                        <span class='date text-muted float-md-right'>24.04.2020</span>  
+                        <h6 class='mb-1'>Mike John</h6>
+                    </div>
+                </div> <!-- icontext.// -->
+                <div class='mt-3'>
+                    <p>Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip</p>    
+                </div>
+            </article>
+        </div> <!-- col-md-9.// -->
+    </div> <!-- row.// -->
+    ";
+  } else {
+    echo "No user found with the provided ID.";
+  }
+} else {
+  echo "No user ID provided.";
+}
+?>
+
 
 	
 
