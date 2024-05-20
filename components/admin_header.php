@@ -26,9 +26,12 @@ session_start();
 
 <!-- Font awesome 5 -->
 <link href="fonts/fontawesome/css/all.min.css" type="text/css" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css" rel="stylesheet" />
+ 
 
 <!-- custom style -->
 <link href="css/ui.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="style.css">
 <link href="css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
 
 <!-- custom javascript -->
@@ -69,13 +72,13 @@ $(document).ready(function() {
     <ul class="navbar-nav">
    
 		<li><a href="#" class="nav-link">
-    <?php
+    <!-- <?php
             
             if (isset($_SESSION['success'])) {
                 echo $_SESSION['success'];
                 unset($_SESSION['success']);
             }
-            ?>
+            ?> -->
   
   </a></li>
 		

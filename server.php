@@ -75,10 +75,17 @@
             if (mysqli_num_rows($result) > 0) {
 
                 $user = mysqli_fetch_assoc($result);
-                $_SESSION['user'] = $user;
-                $_SESSION['success'] =$user['firstname'];
-                header("Location:admin.php");
-                exit();
+                if ($user['role'] === 'admin') {
+                    $_SESSION['user'] = $user;
+                    $_SESSION['success'] =$user['firstname'];
+                    header("Location: admin.php");
+                    exit();
+
+                 }else{
+                    $_SESSION['user'] = $user;                    
+                    header("Location:index.php");
+                    exit();
+            }
             }else{
                 $_SESSION['error'] = "Incorrect Email or Password";
                 header("Location:signin.php");
@@ -91,7 +98,88 @@
 
         }
         
+
+
+
+        // if (isset($_POST['savecategory'])) {
+        //     // Sanitize user inputs
+        //     $categoryname = sanitize_input($_POST["categoryname"]);
+        //     $price = sanitize_input($_POST["price"]);
+        //     $quantity = sanitize_input($_POST["quantity"]);
+        //     $description = sanitize_input($_POST["description"]);
         
+        //     // Check if an image file was uploaded
+        //     if (!empty($_FILES["image"]["tmp_name"])) {
+        //         // Get image data
+        //         $imgData = addslashes(file_get_contents($_FILES['image']['tmp_name']));
+        //         $imgType = $_FILES['image']['type'];
+        
+        //         // Insert product data into the database
+        //         $sql = "INSERT INTO categories (categoryname, price, quantity, description, image, imageType)VALUES('$categoryname', '$price', '$quantity', '$description', '$imgData', '$imgType')";
+        //         $result = mysqli_query($conn, $sql);
+        
+        //         if ($result) {
+        //             echo "<script>alert('Product added successfully!');</script>";
+        //         } else {
+        //             echo "Error: " . mysqli_error($conn);
+        //         }
+        //     } else {
+        //         echo "<script>alert('Please select an image file.');</script>";
+        //     }
+        // }
+        
+        
+        
+        
+
+
+
+
+        function sanitize_input($data) {
+            // Trim whitespace from the beginning and end of the string
+            $data = trim($data);
+            // Remove backslashes (\) from the string
+            $data = stripslashes($data);
+            // Convert special characters to HTML entities to prevent XSS
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+        
+        if (isset($_POST['savecategory'])) {
+            // Sanitize user inputs
+            $categoryname = sanitize_input($_POST["categoryname"]);
+            $description = sanitize_input($_POST["description"]);
+        
+            // Check if an image file is uploaded
+            if (!empty($_FILES["image"]["tmp_name"])) {
+                // Get image data and type
+                $imgData = addslashes(file_get_contents($_FILES['image']['tmp_name']));
+                $imgType = $_FILES['image']['type'];
+        
+                // Insert data into the database
+                $sql = "INSERT INTO categories (categoryname, description, image, imageType) 
+                        VALUES ('$categoryname','$description', '$imgData', '$imgType')";
+                $result = mysqli_query($conn, $sql);
+        
+                // Check if the insertion was successful
+                if ($result) {
+                    echo "<script>alert('Product added successfully!');</script>";
+                    header("Location: add.php"); 
+            exit();
+                } else {
+                    echo "Error: " . mysqli_error($conn);
+                }
+            } else {
+                echo "<script>alert('Please select an image file.');</script>";
+            }
+        }
+
+
+
+
+
+
+
     }
     
 
