@@ -149,6 +149,12 @@ $totalItems = mysqli_num_rows($resultpro);
 <header class="border-bottom mb-4 pb-3">
 		<div class="form-inline">
 			<span class="mr-md-auto"><?php echo $totalItems; ?> Items found </span>
+			<?php
+if (isset($_SESSION['message'])) {
+    echo "<div class='alert alert-warning'>" . $_SESSION['message'] . "</div>";
+    unset($_SESSION['message']); 
+}
+?>
 			
 		</div>
 </header><!-- sect-heading -->
@@ -157,32 +163,37 @@ $totalItems = mysqli_num_rows($resultpro);
 
 
 
+<div class="row">
 <?php
 if (mysqli_num_rows($resultpro) > 0) {
-    // Output data of each row
     while ($row = mysqli_fetch_assoc($resultpro)) {
         echo "<div class='col-md-4'>
             <figure class='card card-product-grid'>
-                <div class='img-wrap'> 
-				<a href='product-detail.php?id=" . htmlspecialchars($row['id']) . "' class='img-wrap'><img src='data:" . htmlspecialchars($row['imageType']) . ";base64," . base64_encode($row['image']) . "' class='img-xs border'/></a>
-                </div> <!-- img-wrap.// -->
+                <div class='img-wrap'>
+                    <a href='product-detail.php?id=" . htmlspecialchars($row['id']) . "' class='img-wrap'><img src='data:" . htmlspecialchars($row['imageType']) . ";base64," . base64_encode($row['image']) . "' class='img-xs border'/></a>
+                </div>
                 <figcaption class='info-wrap'>
                     <div class='fix-height'>
                         <a href='product-detail.php?id=" . htmlspecialchars($row['id']) . "' class='title'>" . htmlspecialchars($row['ProductName']) . "</a>
                         <div class='price-wrap mt-2'>
                             <span class='price'>Rwf" . htmlspecialchars($row['price']) . "</span>
                             <del class='price-old'>Rwf 2000 </del>
-                        </div> <!-- price-wrap.// -->
+                        </div>
                     </div>
-                    <a href='#' class='btn btn-block btn-success'>Added to cart </a>
+                    <form action='cart_server.php' method='POST'>
+                        <input type='hidden' name='product_id' value='" . htmlspecialchars($row['id']) . "'>
+                        <button type='submit' class='btn btn-block btn-primary' name='add_to_cart'>Add to cart</button>
+                    </form>
                 </figcaption>
             </figure>
-        </div> <!-- col.// -->";
+        </div>";
     }
 } else {
     echo "<p>No categories found</p>";
 }
 ?>
+</div>
+
 
 	
 
