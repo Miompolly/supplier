@@ -2,16 +2,14 @@
 session_start(); 
 include 'components/user_header.php'; 
 
-// PHP code for displaying JavaScript alerts
 if (isset($_SESSION['message'])) {
     echo "<script>alert('" . $_SESSION['message'] . "');</script>";
-    unset($_SESSION['message']); // Clear the message after displaying it
+    unset($_SESSION['message']);
 }
 ?>
 
 <section class="section-content padding-y bg">
     <div class="container">
-        <!-- ============================ COMPONENT 1 ================================= -->
         <div class="card">
             <div class="row no-gutters">
                 <aside class="col-md-6">
@@ -29,8 +27,8 @@ if (isset($_SESSION['message'])) {
                                 echo "
                                 <div class='img-big-wrap'>
                                     <img src='data:" . htmlspecialchars($row["imageType"]) . ";base64," . base64_encode($row["image"]) . "' class='img-xs border'/>
-                                </div> <!-- img-big-wrap.// -->
-                                </article> <!-- gallery-wrap .end// -->
+                                </div>
+                                </article>
                                 </aside>
                                 <main class='col-md-6 border-left'>
                                 <article class='content-body'>
@@ -63,22 +61,32 @@ if (isset($_SESSION['message'])) {
                                           </label>
                                         </div> 
                                     </div>
-                                </div> <!-- row.// -->
+                                </div>
                                 <hr>
-                                <form action='cart_server.php' method='POST'>
+                                 <form action='cart_server.php' method='POST'>
                                     <input type='hidden' name='product_id' value='{$row['id']}'>
-                                    <button type='submit' class='btn btn-primary' name='add_to_cart'><span class='text'>Add to cart</span> <i class='fas fa-shopping-cart'></i> </button>
-                                    <button href='#' class='btn  btn-success'> <span class='text'>Added to cart</span> <i class='fas fa-check'></i>  </button>
-                                    <a href='cart.php' class='btn btn-outline-primary' name='add_to_cart'><span class='text'>View Cart</span> <i class='fas fa-eye'></i> </a>
-
-
+                                    ";
+                                    if (isset($_SESSION['cart'][$row['id']])) {
+                                        echo "<button type='button' class='btn btn-success'>
+                                            <span class='text'>Added to cart</span>
+                                            <i class='fas fa-check'></i>
+                                        </button>";
+                                    } else {
+                                        echo "<button type='submit' class='btn btn-primary' name='add_to_cart'>
+                                            <span class='text'>Add to cart</span>
+                                            <i class='fas fa-shopping-cart'></i>
+                                        </button>";
+                                    }
+                                    echo "
+                                    <a href='cart.php' class='btn btn-outline-primary'>
+                                        <span class='text'>View Cart</span> 
+                                        <i class='fas fa-eye'></i>
+                                    </a>
                                 </form>
-                                </article> <!-- product-info-aside .// -->
-                                </main> <!-- col.// -->
-                                </div> <!-- row.// -->
-                                </div> <!-- card.// -->
-                                <!-- ============================ COMPONENT 1 END .// ================================= -->
-
+                                </article>
+                                </main>
+                                </div>
+                                </div>
                                 <br>
 
                                 <div class='row'>
@@ -94,14 +102,13 @@ if (isset($_SESSION['message'])) {
                                                     <span class='date text-muted float-md-right'>24.04.2020</span>  
                                                     <h6 class='mb-1'>Mike John</h6>
                                                 </div>
-                                            </div> <!-- icontext.// -->
+                                            </div>
                                             <div class='mt-3'>
                                                 <p>Dummy comment Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip</p>    
                                             </div>
                                         </article>
-                                    </div> <!-- col-md-9.// -->
-                                </div> <!-- row.// -->
-                                ";
+                                    </div>
+                                </div>";
                             } else {
                                 echo "No user found with the provided ID.";
                             }
@@ -109,11 +116,10 @@ if (isset($_SESSION['message'])) {
                             echo "No user ID provided.";
                         }
                         ?>
-            </div> <!-- col.// -->
-        </div> <!-- row.// -->
-    </div> <!-- container .//  -->
+            </div>
+        </div>
+    </div>
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
 
 </body>
 </html>

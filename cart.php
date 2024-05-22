@@ -85,7 +85,7 @@ if (!empty($_SESSION['cart'])) {
             <p class="text-center mb-3">
                 <img src="./images/misc/payments.png" height="26">
             </p>
-            <a href="./place-order.html" class="btn btn-primary btn-block"> Checkout </a>
+            <a class="btn btn-primary btn-block" onclick="handleCheckout()"> Checkout </a>
             <a href="products.php" class="btn btn-light btn-block">Continue Shopping</a>
         </div> <!-- card-body.// -->
         </div> <!-- card.// -->
@@ -98,5 +98,20 @@ if (!empty($_SESSION['cart'])) {
 </div> <!-- container .//  -->
 </section>
 <!-- ========================= SECTION CONTENT END// ========================= -->
+<script>
+
+function handleCheckout() {
+    var isLoggedIn = <?php echo json_encode($is_logged_in); ?>;
+    if (isLoggedIn) {
+        window.location.href = 'place-order.php';
+    } else {
+        window.location.href = 'signin.php';
+    }
+}
+
+</script>
+
+
+
 </body>
 </html>
