@@ -74,23 +74,36 @@ if (!empty($_SESSION['cart'])) {
 
     </aside> <!-- col.// -->
     <aside class="col-lg-3">
-
-        <div class="card">
+    <div class="card">
         <div class="card-body">
+            <?php
+            // Calculate total price from cart items
+            $totalPrice = 0;
+            if (!empty($_SESSION['cart'])) {
+                foreach ($_SESSION['cart'] as $product) {
+                    $subtotal = $product['price'] * $product['quantity'];
+                    $totalPrice += $subtotal;
+                }
+            }
+            ?>
+
             <dl class="dlist-align">
-              <dt>Total price:</dt>
-              <dd class="text-right">Rwf <?php echo number_format($totalPrice, 2); ?></dd>
+                <dt>Total price:</dt>
+                <dd class="text-right">Rwf <?php echo number_format($totalPrice, 2); ?></dd>
             </dl>
             <hr>
             <p class="text-center mb-3">
                 <img src="./images/misc/payments.png" height="26">
             </p>
-            <a class="btn btn-primary btn-block" onclick="handleCheckout()"> Checkout </a>
+            <form id="checkoutForm" action="place-order.php" method="POST">
+                <input type="hidden" name="cart_data" value="<?php echo htmlspecialchars(json_encode($_SESSION['cart'])); ?>">
+                <button type="submit" class="btn btn-primary btn-block">Checkout</button>
+            </form>
             <a href="products.php" class="btn btn-light btn-block">Continue Shopping</a>
         </div> <!-- card-body.// -->
-        </div> <!-- card.// -->
-
+    </div> <!-- card.// -->
 </aside> <!-- col.// -->
+
 
 </div> <!-- row.// -->
 <!-- ============================ COMPONENT 1 END .// ================================= -->

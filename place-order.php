@@ -1,4 +1,39 @@
-<?php include 'components/user_header.php'; ?>
+<?php
+session_start();
+include 'config.php'; // Ensure your database connection is established here
+include 'components/user_header.php';
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: signin.php");
+    exit();
+}
+
+// Fetch user data from the database
+$user_id = $_SESSION['user_id'];
+$user_query = $conn->prepare("SELECT * FROM users WHERE id = ?");
+$user_query->bind_param("i", $user_id);
+$user_query->execute();
+$user_result = $user_query->get_result();
+$user_data = $user_result->fetch_assoc();
+
+// Fetch cart data from the session
+$cart_data = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+
+// Calculate total price dynamically based on cart items
+$total_price = 0;
+foreach ($cart_data as $item) {
+    $total_price += $item['price'] * $item['quantity'];
+}
+
+// Calculate tax
+$tax_rate = 0.1; // 10%
+$tax_amount = $total_price * $tax_rate;
+
+?>
+
+
+
 <section class="section-content padding-y bg">
 <div class="container">
 
@@ -10,45 +45,20 @@
 
 <article class="card mb-4">
 <div class="card-body">
-	<h4 class="card-title mb-4">Review cart</h4>
-	<div class="row">
-		<div class="col-md-6">
-			<figure class="itemside  mb-4">
-				<div class="aside"><img src="./images/items/1.jpg" class="border img-sm"></div>
-				<figcaption class="info">
-					<p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-					<span class="text-muted">2x = $560 </span>
-				</figcaption>
-			</figure>
-		</div> <!-- col.// -->
-		<div class="col-md-6">
-			<figure class="itemside  mb-4">
-				<div class="aside"><img src="./images/items/2.jpg" class="border img-sm"></div>
-				<figcaption class="info">
-					<p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-					<span class="text-muted">2x = $560 </span>
-				</figcaption>
-			</figure>
-		</div> <!-- col.// -->
-		<div class="col-md-6">
-			<figure class="itemside mb-4">
-				<div class="aside"><img src="./images/items/3.jpg" class="border img-sm"></div>
-				<figcaption class="info">
-					<p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-					<span class="text-muted">2x = $560 </span>
-				</figcaption>
-			</figure>
-		</div> <!-- col.// -->
-		<div class="col-md-6">
-			<figure class="itemside  mb-4">
-				<div class="aside"><img src="./images/items/4.jpg" class="border img-sm"></div>
-				<figcaption class="info">
-					<p>Apple iPad (2019) 32Gb Wi-Fi gold </p>
-					<span class="text-muted">2x = $560 </span>
-				</figcaption>
-			</figure>
-		</div> <!-- col.// -->
-	</div> <!-- row.// -->
+    <h4 class="card-title mb-4">Review cart</h4>
+    <div class="row">
+        <?php foreach ($cart_data as $item): ?>
+        <div class="col-md-6">
+            <figure class="itemside mb-4">
+                <div class="aside"><img src="<?php echo $item['image']; ?>" class="border img-sm"></div>
+                <figcaption class="info">
+                    <p><?php echo $item['name']; ?></p>
+                    <span class="text-muted"><?php echo $item['quantity']; ?>x = Rwf <?php echo $item['price']; ?></span>
+                </figcaption>
+            </figure>
+        </div> <!-- col.// -->
+        <?php endforeach; ?>
+    </div> <!-- row.// -->
 </div> <!-- card-body.// -->
 </article> <!-- card.// -->
 
@@ -60,19 +70,19 @@
 		<div class="row">
 			<div class="form-group col-sm-6">
 				<label>Frst name</label>
-				<input type="text" placeholder="Type here" class="form-control">
+				<input type="text"  class="form-control" value="<?php echo htmlspecialchars($user_data['firstname']); ?>" readonly>
 			</div>
 			<div class="form-group col-sm-6">
 				<label>Last name</label>
-				<input type="text" placeholder="Type here" class="form-control">
+				<input type="text" value="<?php echo htmlspecialchars($user_data['lastname']); ?>" readonly class="form-control">
 			</div>
 			<div class="form-group col-sm-6">
 				<label>Phone</label>
-				<input type="text" value="+998" class="form-control">
+				<input type="text"  value="<?php echo htmlspecialchars($user_data['phone']); ?>" class="form-control">
 			</div>
 			<div class="form-group col-sm-6">
 				<label>Email</label>
-				<input type="email" placeholder="example@gmail.com" class="form-control">
+				<input type="email" value="<?php echo htmlspecialchars($user_data['email']); ?>" readonly class="form-control">
 			</div>
 		</div> <!-- row.// -->	
 	</form>
@@ -88,38 +98,27 @@
 
 		<div class="row">
 				<div class="form-group col-sm-6">
-					<label>Country*</label>
-					<select name="" class="form-control">
-						<option value="">India</option>
-						<option value="">United States</option>
-						<option value="">France</option>
-						<option value="">Italy</option>
-					</select>
+					<label>Province*</label>
+					<input type="text" value="<?php echo htmlspecialchars($user_data['province']); ?>" class="form-control">
 				</div>
 				<div class="form-group col-sm-6">
-					<label>State*</label>
-					<input type="text" placeholder="Type here" class="form-control">
+					<label>District*</label>
+					<input type="text" value="<?php echo htmlspecialchars($user_data['district']); ?>" class="form-control">
 				</div>
 				<div class="form-group col-sm-8">
-					<label>Street*</label>
-					<input type="text" placeholder="Type here" class="form-control">
+					<label>Sector*</label>
+					<input type="text" value="<?php echo htmlspecialchars($user_data['sector']); ?>" class="form-control">
 				</div>
 				<div class="form-group col-sm-4">
-					<label>Building</label>
-					<input type="text" placeholder="" class="form-control">
+					<label>Cell*</label>
+					<input type="text" value="<?php echo htmlspecialchars($user_data['cell']); ?>" class="form-control">
 				</div>
 				<div class="form-group col-sm-4">
 					<label>House</label>
 					<input type="text" placeholder="Type here" class="form-control">
 				</div>
-				<div class="form-group col-sm-4">
-					<label>Postal code</label>
-					<input type="text" placeholder="" class="form-control">
-				</div>
-				<div class="form-group col-sm-4">
-					<label>Zip</label>
-					<input type="text" placeholder="" class="form-control">
-				</div>
+				
+				
 		</div> <!-- row.// -->	
 	</form>
 </div> <!-- card-body.// -->
@@ -173,29 +172,28 @@
   
 		</main> <!-- col.// -->
 		<aside class="col-md-4">
-			<div class="card">
-		<div class="card-body">
-			<dl class="dlist-align">
-			  <dt>Total price:</dt>
-			  <dd class="text-right">$69.97</dd>
-			</dl>
-			<dl class="dlist-align">
-			  <dt>Tax:</dt>
-			  <dd class="text-right"> $10.00</dd>
-			</dl>
-			<dl class="dlist-align">
-			  <dt>Total:</dt>
-			  <dd class="text-right text-dark b"><strong>$59.97</strong></dd>
-			</dl>
-			<hr>
-			<p class="text-center mb-3">
-				<img src="./images/misc/payments.png" height="26">
-			</p>
-			<a href="./place-order.html" class="btn btn-primary btn-block"> Place Order </a>
-			
-		</div> <!-- card-body.// -->
-		</div> <!-- card.// -->
-		</aside> <!-- col.// -->
+        <div class="card">
+            <div class="card-body">
+                <dl class="dlist-align">
+                    <dt>Total price:</dt>
+                    <dd class="text-right">Rwf <?php echo number_format($total_price, 2); ?></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Tax (10%):</dt>
+                    <dd class="text-right">Rwf <?php echo number_format($tax_amount, 2); ?></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Total (Including Tax):</dt>
+                    <dd class="text-right text-dark b"><strong>Rwf <?php echo number_format($total_price + $tax_amount, 2); ?></strong></dd>
+                </dl>
+                <hr>
+                <p class="text-center mb-3">
+                    <img src="./images/misc/payments.png" height="26">
+                </p>
+                <a href="./place-order.html" class="btn btn-primary btn-block">Place Order</a>
+            </div>
+        </div>
+    </aside>
 	</div> <!-- row.// -->
 
 <!-- ============================ COMPONENT 2 END//  ================================= -->
